@@ -1,0 +1,17 @@
+environment: production
+application: capistrano_lazy
+repo_url: https://bitbucket.org/nghialv/capistrano_lazy
+deploy:
+  directory: /var/www/capistrano_lazy
+  user: deploy
+  hosts: 
+    - localhost
+  pid_file: unicorn_capistrano_lazy.pid
+unicorn:
+  worker_processes: 4
+  sock_file: unicorn_capistrano_lazy.sock
+  pid_file: unicorn_capistrano_lazy.pid
+  host: localhost
+  port: 5889
+nginx:
+  domains: 

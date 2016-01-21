@@ -1,5 +1,6 @@
 require "capistrano_lazy/version"
+require "capistrano_lazy/option"
 
 module CapistranoLazy
-  # Your code goes here...
+  
 end
