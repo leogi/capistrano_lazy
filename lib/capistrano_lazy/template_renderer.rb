@@ -16,6 +16,7 @@ module CapistranoLazy
     def export filepath
       prepare_dir filepath
 
+      puts "\e[32mCreate\e[0m #{filepath}"
       File.open(filepath, "w+") do |f|
         f.write render
       end
