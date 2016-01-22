@@ -1,0 +1,53 @@
+server {
+  listen 80;
+  server_name <%= @server_names %>;
+  access_log  /var/log/nginx/<%= @application %>.access.log main;
+  error_log   /var/log/nginx/<%= @application %>.error.log;
+
+  location ~* "-[a-z0-9]{32}\.(html|ico|css|js|gif|jpe?g|png|ttf|eot|svg|woff|otf)(\?[0-9]+)?$" {
+    if ($uri ~ \.(ico|css|gif|jpe?g|png)(\?[0-9]+)?$) { access_log off; }
+    expires 168h;
+    root <%= @deploy_directory %>/current/public;
+    break;
+  }
+  location / {
+    if (-f $request_filename) { break; }
+    if ($http_user_agent ~ ELB-HealthChecker/1.0) { access_log off; }
+
+    proxy_redirect     off;
+    proxy_set_header   Host             $host;
+    proxy_set_header   X-Real-IP        $remote_addr;
+    proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+    proxy_read_timeout 3000;
+    root <%= @deploy_directory %>/current/public;
+    proxy_pass http://<%= @unicorn_host %>:<%= @unicorn_port %>;
+  }
+}
+
+server {
+  listen 443;
+  server_name <%= @server_names %>;
+  ssl on;
+  ssl_certificate /etc/nginx/ssl/nginx.crt;
+  ssl_certificate_key /etc/nginx/ssl/nginx.key;
+  ssl_session_timeout 5m;
+  ssl_protocols SSLv3 TLSv1;
+  ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv3:+EXP;
+  ssl_prefer_server_ciphers on;
+  location ~* "-[a-z0-9]{32}\.(html|ico|css|js|gif|jpe?g|png|ttf|eot|svg|woff|otf)(\?[0-9]+)?$" {
+    expires 168h;
+    root <%= @deploy_directory %>/current/public;
+    break;
+  }
+  location / {
+    if (-f $request_filename) { break; }
+    proxy_redirect     off;
+    proxy_set_header   Host             $host;
+    proxy_set_header   X-Real-IP        $remote_addr;
+    proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+    proxy_set_header   X_FORWARDED_PROTO https;
+    proxy_read_timeout 3000;
+    root <%= @deploy_directory %>/current/public;
+    proxy_pass http://<%= @unicorn_host %>:<%= @unicorn_port %>;
+  }
+}

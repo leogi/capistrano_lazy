@@ -14,6 +14,7 @@ namespace :capistrano do
 
     namespace :deploy do
       task :install do
+        CapistranoLazy::ServerConfig.new.config!
       end
     end
   end
