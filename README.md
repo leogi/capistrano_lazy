@@ -22,7 +22,58 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### 1. Add gem:
+
+```
+gem 'unicorn'
+gem 'unicorn-worker-killer'
+gem 'capistrano', '3.1.0'
+gem 'capistrano-rbenv'
+gem 'capistrano-bundler', github: 'capistrano/bundler'
+gem 'capistrano-rails'
+gem "capistrano_lazy"
+```
+
+### 2. Run command to generate deploy.yml file:
+
+```
+rake capistrano:lazy:install
+```
+
+```
+HOME -- deploy.yml
+```
+
+### 3. After edit deploy.yml, run below command to generate all config file.
+
+```
+rake capistrano:lazy:setup
+```
+
+```
+HOME 
+  -- Capfile
+  ++ config
+     -- deploy.rb
+     -- unicorn.rb
+     ++ deploy
+        -- staging.rb
+        -- production.rb
+```
+
+### 4. In production server, run command to setup nginx, unicorn, and deploy directory
+
+```
+rake capistrano:lazy:deploy:setup
+```
+
+```
+database.yml
+secrets.yml
+nginx_site
+unicorn_script
+```
+### 5. Enjoin to deploy with capistrano command.
 
 ## Development
 
@@ -33,4 +84,3 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/capistrano_lazy.
-
