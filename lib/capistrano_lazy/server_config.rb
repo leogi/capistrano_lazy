@@ -26,6 +26,15 @@ module CapistranoLazy
           unicorn_host: @settings.unicorn.host,
           unicorn_port: @settings.unicorn.port
         }
+        
+      if File.exists? "/etc/nginx"
+        unless File.exists? "/etc/nginx/sites-enabled"
+          `sudo mkdir /etc/nginx/sites-enabled`
+        end
+        `sudo mv nginx_#{@settings.application} /etc/nginx/sites-enabled/#{@settings.application}`
+      else
+        puts "Nginx is not found. Please install nginx first."
+      end
     end
 
     def cp_unicorn
@@ -37,6 +46,8 @@ module CapistranoLazy
           deploy_user: @settings.deploy.user,
           pid_file: @settings.unicorn.pid_file
         }
+      `sudo mv unicorn_#{@settings.application} /etc/init.d/`
+      `sudo chmod +x /etc/init.d/unicorn_#{@settings.application}`
     end
   end
 end
