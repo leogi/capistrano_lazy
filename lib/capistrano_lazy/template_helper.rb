@@ -3,7 +3,7 @@ require "fileutils"
 require "capistrano_lazy/template_renderer"
 
 module CapistranoLazy
-  module Template
+  module TemplateHelper
     def template source_file, destination_file, options = {}
       TemplateRenderer.new(source_file, options).export destination_file
     end

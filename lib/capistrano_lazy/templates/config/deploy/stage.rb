@@ -1,10 +1,11 @@
-set :rails_env, "<%= environment %>"
-set :app_directory, "<%= deploy_directory %>/current"
-set :unicorn_pid_file, "#{fetch(:app_directory)}/tmp/pids/<%= pid_file %>"
+set :rails_env, "<%= @environment %>"
+set :app_directory, "<%= @deploy_directory %>/current"
+set :unicorn_pid_file, "#{fetch(:app_directory)}/tmp/pids/<%= @pid_file %>"
 
-deployer = "<%= deploy_user %>"
+deployer = "<%= @deploy_user %>"
+<% @deploy_hosts = ["localhost"] if @deploy_hosts.nil? || @deploy_hosts.empty? %>
 hosts = %w{
-  <%= deploy_hosts.join(" ") %>
+  <%= @deploy_hosts.join(" ") %>
 }
 proc = lambda { |host| deployer + "@" + host }
 
