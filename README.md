@@ -40,7 +40,30 @@ rake capistrano:lazy:install
 ```
 
 ```
-HOME -- deploy.yml
+# HOME -- deploy.yml
+environment: production
+application: capistrano_lazy
+repo_url: https://bitbucket.org/nghialv/capistrano_lazy
+deploy:
+  directory: /var/www/capistrano_lazy
+  user: deploy
+  groupuser: dev
+  hosts: 
+    - localhost
+  pid_file: unicorn_capistrano_lazy.pid
+unicorn:
+  worker_processes: 4
+  sock_file: unicorn_capistrano_lazy.sock
+  pid_file: unicorn_capistrano_lazy.pid
+  host: localhost
+  port: 5889
+nginx:
+  domains: 
+database:
+  host: localhost
+  name: capistrano_lazy
+  username: root
+  password:
 ```
 
 ### 3. After edit deploy.yml, run below command to generate all config file.
